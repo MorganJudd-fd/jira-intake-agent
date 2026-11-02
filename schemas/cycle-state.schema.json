@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Jira Ticket Intake Cycle State",
+  "description": "State file produced by the jira-intake-agent agent, consumed by downstream Plan/Implement/Verify phases.",
+  "type": "object",
+  "required": ["schemaVersion", "phase", "ticket", "description", "repository"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["intake_in_progress", "intake_complete"]
+    },
+    "ticket": {
+      "type": "object",
+      "required": ["key", "url", "cloudId", "summary", "issueType", "status"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]+-\\d+$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "cloudId": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "issueType": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "priority": {
+          "type": ["string", "null"]
+        },
+        "assignee": {
+          "type": ["string", "null"]
+        },
+        "reporter": {
+          "type": ["string", "null"]
+        },
+        "epic": {
+          "type": ["object", "null"],
+          "properties": {
+            "key": { "type": "string" },
+            "summary": { "type": "string" }
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "components": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "storyPoints": {
+          "type": ["number", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "description": {
+      "type": "string"
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "assertion", "source"],
+        "properties": {
+          "id": { "type": "string" },
+          "assertion": { "type": "string" },
+          "source": { "type": "string" },
+          "original": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "proposedAcceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "assertion"],
+        "properties": {
+          "id": { "type": "string" },
+          "assertion": { "type": "string" },
+          "rationale": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["author", "created", "body"],
+        "properties": {
+          "author": { "type": "string" },
+          "created": { "type": "string" },
+          "body": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": ["blockedBy", "blocks", "relates", "remote"],
+      "properties": {
+        "blockedBy": { "type": "array" },
+        "blocks": { "type": "array" },
+        "relates": { "type": "array" },
+        "remote": { "type": "array" }
+      },
+      "additionalProperties": false
+    },
+    "subtasks": {
+      "type": "array"
+    },
+    "classification": {
+      "type": "object",
+      "required": ["changeType", "scope", "breaking"],
+      "properties": {
+        "changeType": {
+          "type": "string",
+          "enum": ["feat", "fix", "refactor", "perf", "docs", "test", "chore", "build", "ci"]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "breaking": {
+          "type": "boolean"
+        },
+        "justification": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "repository": {
+      "type": "object",
+      "required": ["toplevel", "originUrl", "defaultBranch", "resolvedVia"],
+      "properties": {
+        "toplevel": {
+          "type": "string"
+        },
+        "originUrl": {
+          "type": "string"
+        },
+        "defaultBranch": {
+          "type": "string"
+        },
+        "resolvedVia": {
+          "type": "string",
+          "enum": ["ticket", "cwd", "user"]
+        },
+        "dirty": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "summary": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question", "whyItMatters"],
+        "properties": {
+          "question": { "type": "string" },
+          "whyItMatters": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "availableTransitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
