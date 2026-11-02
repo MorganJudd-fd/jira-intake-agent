@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(git rev-parse:*)",
+      "Bash(git remote:*)",
+      "Bash(git symbolic-ref:*)",
+      "Bash(git status:*)",
+      "Bash(git diff --stat:*)",
+      "Bash(git -C *)",
+      "Bash(mkdir -p */.claude/jira-cycle)",
+      "Bash(cat */.gitignore)",
+      "Write(*/.claude/jira-cycle/*)",
+      "Edit(*/.claude/jira-cycle/*)",
+      "Edit(*/.gitignore)",
+      "mcp__atlassian__getAccessibleAtlassianResources",
+      "mcp__atlassian__getJiraIssue",
+      "mcp__atlassian__getJiraIssueRemoteIssueLinks",
+      "mcp__atlassian__getTransitionsForJiraIssue",
+      "mcp__atlassian__getConfluencePage",
+      "mcp__atlassian__search"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__atlassian__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/enforce-read-only-jira.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/validate-state-file.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
